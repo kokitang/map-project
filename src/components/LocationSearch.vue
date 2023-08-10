@@ -14,15 +14,19 @@ import { message } from 'ant-design-vue';
 import { searchLocationByName, getCurrentLocation } from '../services/locationService';
 import locationState from '../models/locationState';
 
-
 const searchQuery = ref('');
+const isLoading = ref(false);
 
 onMounted(async () => {
   fetchCurrentLocation();
 });
 
 const fetchCurrentLocation = async () => {
+  if (isLoading.value) {
+    return;
+  }
   try {
+    isLoading.value = true;
     handleLocationMessage.start();
     const location = await getCurrentLocation();
     console.log("Current location:", location);
@@ -42,12 +46,18 @@ const fetchCurrentLocation = async () => {
     } else {
       handleLocationMessage.error("Error fetching current location. Please try again.");
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const searchLocation = async () => {
-  handleLocationMessage.start();
+  if (isLoading.value) {
+    return;
+  }
   try {
+    isLoading.value = true;
+    handleLocationMessage.start();
     const location = await searchLocationByName(searchQuery.value);
     if (!location) {
       throw new Error('No results found for your query.');
@@ -63,6 +73,8 @@ const searchLocation = async () => {
     } else {
       handleLocationMessage.error('Error searching for location. Please try again.');
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 
