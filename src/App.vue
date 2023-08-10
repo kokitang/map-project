@@ -1,7 +1,7 @@
 <template>
   <a-layout class="layout">
     <a-layout-header>
-      <div class="logo">Location Search App</div>
+      <div class="logo">Simple Map</div>
     </a-layout-header>
 
     <a-layout-content class="content">
@@ -12,7 +12,7 @@
     </a-layout-content>
 
     <a-layout-footer style="text-align: center">
-      Location Search App ©2023 by Kelvin Tang
+      Simple Map ©2023 by Kelvin Tang
     </a-layout-footer>
   </a-layout>
 </template>

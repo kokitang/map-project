@@ -1,4 +1,4 @@
-# Location Search App
+# Simple Map
 
 This application allows users to search for locations, view them on a map, and manage a list of searched locations.
 
@@ -29,7 +29,7 @@ This application allows users to search for locations, view them on a map, and m
 2. Navigate to the project directory:
 
    ``` bash
-   cd location-search-app
+   cd simple-map
    ```
 
 3. Install the dependencies:
