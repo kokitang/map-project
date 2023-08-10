@@ -28,11 +28,11 @@ watch(() => locationState.currentLocation, (newLocation) => {
   if (newLocation && map) {
     const { lat, lng } = newLocation;
     const position = new google.maps.LatLng(lat, lng);
-    
+
     // Center the map to the new location
     map.setCenter(position);
     map.setZoom(15);
-    
+
     // Add a marker for the new location
     const marker = new google.maps.Marker({
       position,
@@ -46,16 +46,19 @@ watch(() => locationState.currentLocation, (newLocation) => {
 
 watch(() => locationState.searchedLocations, (locations) => {
   // Clear existing markers
-  locationState.markers.forEach(marker => {
-    marker.setMap(null);
-    marker.setVisible(false)
-  });
+  for (let key in locationState.markers) {
+    if (locationState.markers.hasOwnProperty(key)) { // This check ensures you're not iterating over inherited properties
+      const marker = locationState.markers[key];
+      marker.setMap(null);
+      marker.setVisible(false)
+    }
+  }
   locationState.markers = {};
 
   locations.forEach(location => {
     const { lat, lng, name } = location;
     const position = new google.maps.LatLng(lat, lng);
-    
+
     // Create a marker for each location
     const marker = new google.maps.Marker({
       position,
