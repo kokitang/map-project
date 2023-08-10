@@ -16,6 +16,7 @@ import locationState from '../models/locationState';
 
 const searchQuery = ref('');
 const isLoading = ref(false);
+const loadingMsgKey = ref(null);
 
 onMounted(async () => {
   fetchCurrentLocation();
@@ -77,8 +78,6 @@ const searchLocation = async () => {
     isLoading.value = false;
   }
 };
-
-const loadingMsgKey = ref(null);
 
 const handleLocationMessage = {
   start: () => {
