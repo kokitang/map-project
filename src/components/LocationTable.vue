@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button @click="deleteSelected" type="danger" style="margin-bottom: 16px;">Delete Selected</a-button>
+    <a-button @click="deleteSelected" danger style="margin-bottom: 16px;">Delete Selected</a-button>
     <a-table :dataSource="locationState.searchedLocations" :rowSelection="rowSelectionComputed" :columns="columns"
       :scroll="{ x: 'max-content' }" :customRow="rowClick"></a-table>
   </div>
