@@ -12,7 +12,6 @@
 import { ref, watch } from 'vue';
 import { defineProps } from 'vue';
 import locationState from '../models/locationState';
-import { fetchTimeZone } from '../services/locationService';
 
 const props = defineProps(['location']);
 
