@@ -4,7 +4,7 @@
       <a-button @click="fetchCurrentLocation" type="primary" shape="circle" :icon="h(EnvironmentOutlined)"></a-button>
       <a-input-search placeholder="Enter location" v-model:value="searchQuery" @search="searchLocation" enterButton />
     </a-space>
-    <div v-if="suggestions.length && !isSelectedSuggestion" class="suggestions-dropdown">
+    <div v-if="suggestions.length && canShowSuggestions()" class="suggestions-dropdown">
       <div v-for="suggestion in suggestions" :key="suggestion.place_id" @click="selectPlace(suggestion)">
         {{ suggestion.description }}
       </div>
@@ -24,7 +24,9 @@ const searchQuery = ref('');
 const isLoading = ref(false);
 const loadingMsgKey = ref(null);
 const suggestions = ref([]);
-const isSelectedSuggestion = ref(false);
+const canShowSuggestions = () => {
+  return searchQuery.value && !isLoading.value && suggestions.value.length;
+};
 
 onMounted(async () => {
   fetchCurrentLocation();
@@ -41,7 +43,8 @@ const fetchCurrentLocation = async () => {
     console.log("Current location:", location);
     if (location) {
       handleLocationMessage.success();
-      location.key = locationState.searchedLocations.length;
+      location.key = Date.now().toString();
+      location.date = new Date().toLocaleString();
       locationState.currentLocation = location;
       locationState.searchedLocations.push(location);
     }
@@ -61,7 +64,6 @@ const fetchCurrentLocation = async () => {
 };
 
 const searchLocation = async (value, event) => {
-  console.log(event);
   if (isLoading.value) {
     return;
   }
@@ -72,16 +74,13 @@ const searchLocation = async (value, event) => {
     if (!location) {
       throw new Error('No results found for your query.');
     }
-    location.key = locationState.searchedLocations.length;
+    location.key = Date.now().toString();
+    location.date = new Date().toLocaleString();
     handleLocationMessage.success();
     locationState.currentLocation = location;
     locationState.searchedLocations.push(location);
-    if (event && event.type === 'keydown') {
-      throttle(() => {
-        console.log("Set true");
-        isSelectedSuggestion.value = true;
-      }, 1000, true)();
-    }
+    // Clear the search text
+    searchQuery.value = '';
   } catch (error) {
     console.error("Error searching for location:", error.message);
     if (error.message.includes('No results found')) {
@@ -96,12 +95,6 @@ const searchLocation = async (value, event) => {
 
 const fetchSuggestions = debounce(async () => {
   try {
-    if (isSelectedSuggestion.value) {
-      throttle(() => {
-        console.log("Set false");
-        isSelectedSuggestion.value = false;
-      }, 1000)();
-    }
     suggestions.value = await fetchPlaceSuggestions(searchQuery.value);
   } catch (error) {
     // Skip suggestions if there is an error
@@ -112,10 +105,6 @@ const fetchSuggestions = debounce(async () => {
 const selectPlace = async (suggestion) => {
   searchQuery.value = suggestion.description;
   await searchLocation();
-  throttle(() => {
-    console.log("Set true");
-    isSelectedSuggestion.value = true;
-  }, 1000)();
 };
 
 const handleLocationMessage = {

@@ -28,6 +28,13 @@ const columns = [
     title: 'Longitude',
     dataIndex: 'lng',
     key: 'lng'
+  },
+  {
+    title: 'Search Time',
+    dataIndex: 'date',
+    key: 'date',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.key - b.key,
   }
 ];
 
